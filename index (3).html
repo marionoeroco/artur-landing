@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artur - Automatización Inteligente de Facturas con Google Workspace</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        google: {
+                            blue: '#4285F4',
+                            green: '#0F9D58',
+                            yellow: '#F4B400',
+                            red: '#DB4437',
+                            gray: '#5f6368'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'premium': '0 10px 30px -10px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.02)',
+                        'google-shadow': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom Separated Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Custom Separated Javascript -->
+    <script src="main.js" defer></script>
+</head>
+<body class="bg-[#FAFAFA] text-gray-900 font-sans overflow-x-hidden antialiased">
+
+    <!-- Navigation -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo with Vector Fallback for Instant Canvas Preview Rendering -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                    <div class="relative w-11 h-11 flex items-center justify-center">
+                        <img src="ArturLogo.png" alt="Artur Logo" class="h-11 w-auto object-contain absolute z-10" id="brand-logo" onerror="this.style.display='none'; document.getElementById('logo-fallback').classList.remove('hidden');">
+                        <div id="logo-fallback" class="hidden w-10 h-10 rounded-xl bg-gradient-to-tr from-google-blue via-google-green to-google-yellow flex items-center justify-center text-white font-black text-xl shadow-md">
+                            A
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-xl font-black tracking-tight text-gray-900 leading-none">Artur</span>
+                        <span class="text-[9px] font-bold text-google-blue tracking-widest uppercase mt-0.5">Lo hace por ti</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Menu: Pointing perfectly to smooth scroll IDs (Removed "Cómo funciona" menu link) -->
+                <nav class="hidden md:flex space-x-8 items-center">
+                    <a href="#problema" class="text-sm font-semibold text-gray-600 hover:text-google-blue transition-colors">El Reto</a>
+                    <a href="#solucion" class="text-sm font-semibold text-gray-600 hover:text-google-blue transition-colors">La Solución</a>
+                    <a href="#live-demo-seccion" class="text-sm font-semibold text-gray-600 hover:text-google-blue transition-colors">Demo En Vivo</a>
+                    <a href="#beneficios" class="text-sm font-semibold text-gray-600 hover:text-google-blue transition-colors">Beneficios</a>
+                    <a href="#precios" class="text-sm font-semibold text-gray-600 hover:text-google-blue transition-colors">Precios</a>
+                    <button onclick="openModal()" class="inline-flex items-center justify-center px-5 py-2.5 border border-transparent text-sm font-bold rounded-full text-white bg-google-blue hover:bg-blue-600 shadow-sm transition-all hover:scale-105 active:scale-95 duration-150">
+                        Diagnóstico Gratis
+                    </button>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-google-blue focus:outline-none p-2 rounded-lg" aria-label="Menu">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-100 px-4 pt-2 pb-6 space-y-3 shadow-lg">
+            <a href="#problema" class="block text-base font-semibold text-gray-600 hover:text-google-blue transition-colors py-2">El Reto</a>
+            <a href="#solucion" class="block text-base font-semibold text-gray-600 hover:text-google-blue transition-colors py-2">La Solución</a>
+            <a href="#live-demo-seccion" class="block text-base font-semibold text-gray-600 hover:text-google-blue transition-colors py-2">Demo En Vivo</a>
+            <a href="#beneficios" class="block text-base font-semibold text-gray-600 hover:text-google-blue transition-colors py-2">Beneficios</a>
+            <a href="#precios" class="block text-base font-semibold text-gray-600 hover:text-google-blue transition-colors py-2">Precios</a>
+            <div class="pt-2">
+                <button onclick="openModal()" class="w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-bold rounded-full text-white bg-google-blue hover:bg-blue-600 shadow-md">
+                    <i class="fa-regular fa-calendar-check mr-2"></i> Agendar Sesión (15 Min)
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-b from-white via-white to-[#F2F6FC] pt-10 pb-20 md:py-24 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                <!-- Left text content -->
+                <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
+                    <div class="inline-flex items-center space-x-2 bg-blue-50 border border-blue-100 rounded-full py-1.5 px-4 text-google-blue text-xs sm:text-sm font-semibold mx-auto lg:mx-0">
+                        <span class="flex h-2 w-2 rounded-full bg-google-green animate-pulse"></span>
+                        <span>100% Integrado en Google Workspace</span>
+                    </div>
+
+                    <!-- HEADLINE -->
+                    <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 tracking-tight leading-tight">
+                        Deja de transcribir <br class="hidden sm:inline">
+                        <span class="text-google-red">facturas a mano.</span> <br>
+                        Deja que <span class="gradient-text">Artur</span> lo haga por ti.
+                    </h1>
+
+                    <p class="text-lg sm:text-xl text-gray-600 font-normal leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                        Artur es un asistente de Inteligencia Artificial que vive de forma nativa en tu propio Google Workspace. Sin costosas licencias mensuales ni plataformas externas que aprender.
+                    </p>
+
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                        <button onclick="scrollToDemoAndRun()" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-bold rounded-full text-white bg-google-blue hover:bg-blue-600 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/30 transition-all hover:-translate-y-0.5 active:translate-y-0 duration-150">
+                            <i class="fa-solid fa-play mr-2.5"></i> Ver demo (Artur en acción)
+                        </button>
+                        <a href="#solucion" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 border border-gray-300 text-base font-bold rounded-full text-gray-700 bg-white hover:bg-gray-50 shadow-sm transition-all hover:-translate-y-0.5 active:translate-y-0 duration-150">
+                            ¿Cómo funciona?
+                        </a>
+                    </div>
+
+                    <!-- Trust indicators -->
+                    <div class="pt-4 border-t border-gray-100 flex flex-wrap justify-center lg:justify-start gap-y-4 gap-x-8 text-sm text-gray-500">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-shield-halved text-google-green text-lg"></i>
+                            <span>Seguridad de datos 100% local</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-bolt text-google-yellow text-lg"></i>
+                            <span>Implementación en 48 hrs</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-ban text-google-red text-lg"></i>
+                            <span>Sin pagos mensuales forzosos</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-chart-pie text-google-blue text-lg"></i>
+                            <span>Tu información de egresos registrada al día</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right visual element -->
+                <div class="lg:col-span-5 relative mt-6 lg:mt-0">
+                    <div class="relative mx-auto max-w-[420px] lg:max-w-none">
+                        <!-- Background glow elements -->
+                        <div class="absolute -top-10 -left-10 w-48 h-48 bg-blue-400 rounded-full mix-blend-multiply filter blur-2xl opacity-10 animate-pulse"></div>
+                        <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-green-400 rounded-full mix-blend-multiply filter blur-2xl opacity-10 animate-pulse" style="animation-delay: 2s;"></div>
+                        
+                        <!-- Main Frame representing the flow - STATIC -->
+                        <div class="bg-white rounded-3xl shadow-2xl p-6 border border-gray-100 relative pb-24">
+                            <div class="flex items-center justify-between border-b border-gray-100 pb-4 mb-5">
+                                <div class="flex items-center space-x-2">
+                                    <span class="w-3 h-3 rounded-full bg-google-red"></span>
+                                    <span class="w-3 h-3 rounded-full bg-google-yellow"></span>
+                                    <span class="w-3 h-3 rounded-full bg-google-green"></span>
+                                    <span class="w-3 h-3 rounded-full bg-google-blue"></span>
+                                </div>
+                                <span class="text-xs font-semibold text-gray-400 tracking-wider">PROCESADOR ARTUR AI</span>
+                            </div>
+
+                            <div class="space-y-3.5">
+                                <!-- Step 1: Entrada (Gmail) - RED bg -->
+                                <div class="flex items-center p-3 border border-red-100 bg-red-50/60 rounded-xl">
+                                    <div class="w-9 h-9 rounded-lg bg-google-red text-white flex items-center justify-center shrink-0 shadow-sm transition-all duration-300">
+                                        <i class="fa-solid fa-envelope text-sm"></i>
+                                    </div>
+                                    <div class="ml-3 flex-1 min-w-0">
+                                        <div class="flex items-center justify-between">
+                                            <p class="text-[10px] font-bold text-google-red uppercase tracking-wider">1. Entrada</p>
+                                            <span class="text-[9px] text-gray-500 font-semibold">Gmail</span>
+                                        </div>
+                                        <p class="text-xs font-semibold text-gray-700 truncate">Extrayendo automáticamente de adjuntos PDF/XML</p>
+                                    </div>
+                                </div>
+
+                                <!-- Flow arrow -->
+                                <div class="flex items-center justify-center py-0.5">
+                                    <div class="h-4 w-[2px] bg-gradient-to-b from-google-red to-google-yellow"></div>
+                                </div>
+
+                                <!-- Step 2: Lectura con IA (Gemini) - YELLOW bg -->
+                                <div class="flex items-center p-3 border border-yellow-100 bg-yellow-50/60 rounded-xl">
+                                    <div class="w-9 h-9 rounded-lg bg-google-yellow text-white flex items-center justify-center shrink-0 shadow-sm transition-all duration-300">
+                                        <i class="fa-solid fa-brain text-sm"></i>
+                                    </div>
+                                    <div class="ml-3 flex-1 min-w-0">
+                                        <div class="flex items-center justify-between">
+                                            <p class="text-[10px] font-bold text-google-yellow uppercase tracking-wider">2. Lectura Inteligente</p>
+                                            <span class="text-[9px] text-gray-500 font-semibold">Gemini IA</span>
+                                        </div>
+                                        <p class="text-xs font-semibold text-gray-700 truncate">Extracción precisa de datos fiscales sin plantillas rígidas</p>
+                                    </div>
+                                </div>
+
+                                <!-- Flow arrow -->
+                                <div class="flex items-center justify-center py-0.5">
+                                    <div class="h-4 w-[2px] bg-gradient-to-b from-google-yellow to-google-green"></div>
+                                </div>
+
+                                <!-- Step 3: Base de datos (Sheets) - GREEN bg -->
+                                <div class="flex items-center p-3 border border-green-100 bg-green-50/60 rounded-xl">
+                                    <div class="w-9 h-9 rounded-lg bg-google-green text-white flex items-center justify-center shrink-0 shadow-sm transition-all duration-300">
+                                        <i class="fa-solid fa-file-excel text-sm"></i>
+                                    </div>
+                                    <div class="ml-3 flex-1 min-w-0">
+                                        <div class="flex items-center justify-between">
+                                            <p class="text-[10px] font-bold text-google-green uppercase tracking-wider">3. Base de Datos</p>
+                                            <span class="text-[9px] text-gray-500 font-semibold">Google Sheets</span>
+                                        </div>
+                                        <p class="text-xs font-semibold text-gray-700 truncate">Escritura instantánea del renglón tabulado</p>
+                                    </div>
+                                </div>
+
+                                <!-- Flow arrow -->
+                                <div class="flex items-center justify-center py-0.5">
+                                    <div class="h-4 w-[2px] bg-gradient-to-b from-google-green to-google-blue"></div>
+                                </div>
+
+                                <!-- Step 4: Guardado en Drive - BLUE bg -->
+                                <div class="flex items-center p-3 border border-blue-100 bg-blue-50/60 rounded-xl">
+                                    <div class="w-9 h-9 rounded-lg bg-google-blue text-white flex items-center justify-center shrink-0 shadow-sm transition-all duration-300">
+                                        <i class="fa-solid fa-folder-open text-sm"></i>
+                                    </div>
+                                    <div class="ml-3 flex-1 min-w-0">
+                                        <div class="flex items-center justify-between">
+                                            <p class="text-[10px] font-bold text-google-blue uppercase tracking-wider">4. Clasificación</p>
+                                            <span class="text-[9px] text-gray-500 font-semibold">Google Drive</span>
+                                        </div>
+                                        <p class="text-xs font-semibold text-gray-700 truncate">Renombrado inteligente y organización en carpetas</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Button to trigger full demo scroll -->
+                            <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center bg-gray-50 border border-gray-100 p-2 rounded-2xl">
+                                <button onclick="scrollToDemoAndRun()" class="w-full bg-google-blue hover:bg-blue-600 text-white text-xs font-bold py-2.5 px-4 rounded-xl shadow-sm transition-all flex items-center justify-center space-x-2">
+                                    <i class="fa-solid fa-expand"></i>
+                                    <span>Ver Demo de Flujo en Vivo</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Multi-System Simulator Section -->
+    <section id="live-demo-seccion" class="py-20 bg-slate-900 text-white border-y border-slate-950 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-[0.03] bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-14">
+                <span class="text-xs font-bold text-google-yellow uppercase tracking-widest bg-yellow-950/50 text-google-yellow border border-yellow-900/50 px-3 py-1 rounded-full">DEMOSTRACIÓN INTERACTIVA</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-3">¿Qué hace Artur?</h2>
+                <p class="text-sm sm:text-base text-gray-300 mt-2">Observa cómo procesamos la factura de <span class="font-bold text-google-yellow">"Oficinas y Papelería del Norte"</span> a través de cada módulo de Google Workspace.</p>
+            </div>
+
+            <!-- Start simulation control button -->
+            <div class="flex justify-center mb-10">
+                <button id="master-sim-btn" onclick="runGrandSimulation()" class="bg-gradient-to-r from-google-blue via-google-green to-google-yellow hover:scale-105 active:scale-95 text-slate-950 text-sm font-black py-4 px-10 rounded-full shadow-lg transition-all duration-150 flex items-center space-x-3">
+                    <i id="master-sim-icon" class="fa-solid fa-circle-play text-lg text-slate-950"></i>
+                    <span id="master-sim-text">Iniciar Simulación (15 segs)</span>
+                </button>
+            </div>
+
+            <!-- 4 Connected Panels Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-stretch">
+                <!-- PANEL 1: GMAIL SYSTEM (RED) -->
+                <div id="panel-gmail" class="bg-slate-800/60 border border-slate-700/60 rounded-3xl p-5 flex flex-col justify-between transition-all duration-300">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-slate-700/50 pb-3 mb-4">
+                            <span class="text-xs font-bold text-google-red uppercase tracking-wider flex items-center">
+                                <i class="fa-solid fa-envelope mr-2"></i> 1. Gmail Inbox
+                            </span>
+                            <span id="badge-gmail" class="text-[9px] bg-slate-700 text-slate-300 font-bold px-2 py-0.5 rounded-full">Monitoreando</span>
+                        </div>
+                        
+                        <div class="space-y-2 text-xs">
+                            <!-- Existing Read Email 1 -->
+                            <div class="p-2.5 bg-slate-900/40 border border-slate-800 rounded-xl opacity-75 flex items-center justify-between">
+                                <div class="min-w-0">
+                                    <p class="font-bold truncate">Sistemas de Energía S.A.</p>
+                                    <p class="text-[10px] text-gray-400">Factura_Energia_SEN92.pdf</p>
+                                </div>
+                                <span class="text-[9px] text-google-green font-bold shrink-0"><i class="fa-solid fa-check"></i></span>
+                            </div>
+                            <!-- Existing Read Email 2 -->
+                            <div class="p-2.5 bg-slate-900/40 border border-slate-800 rounded-xl opacity-75 flex items-center justify-between">
+                                <div class="min-w-0">
+                                    <p class="font-bold truncate">Insumos Globales SA</p>
+                                    <p class="text-[10px] text-gray-400">XML_IGL0804.xml</p>
+                                </div>
+                                <span class="text-[9px] text-google-green font-bold shrink-0"><i class="fa-solid fa-check"></i></span>
+                            </div>
+                            <!-- Arriving Email (Oficinas y Papelería del Norte) -->
+                            <div id="email-arriving" class="p-2.5 bg-slate-900/20 border border-dashed border-slate-700 rounded-xl flex items-center justify-between transition-all duration-500">
+                                <div class="min-w-0">
+                                    <p id="email-sender" class="font-bold text-gray-400">Bandeja Vacía</p>
+                                    <p id="email-subject" class="text-[10px] text-gray-500">Esperando correo...</p>
+                                </div>
+                                <span id="email-status-icon" class="text-xs text-gray-600 shrink-0"><i class="fa-solid fa-ellipsis"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-700/50">
+                        <p id="status-gmail" class="text-[11px] text-gray-400 italic">Esperando señal de inicio...</p>
+                    </div>
+                </div>
+
+                <!-- PANEL 2: GEMINI IA PARSING (YELLOW) -->
+                <div id="panel-gemini" class="bg-slate-800/60 border border-slate-700/60 rounded-3xl p-5 flex flex-col justify-between transition-all duration-300 opacity-60">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-slate-700/50 pb-3 mb-4">
+                            <span class="text-xs font-bold text-google-yellow uppercase tracking-wider flex items-center">
+                                <i class="fa-solid fa-brain mr-2"></i> 2. Lectura Gemini
+                            </span>
+                            <span id="badge-gemini" class="text-[9px] bg-slate-700 text-slate-300 font-bold px-2 py-0.5 rounded-full">Inactivo</span>
+                        </div>
+
+                        <!-- Mock PDF / XML Scanning Document View -->
+                        <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 space-y-2 text-[10px] relative overflow-hidden h-[180px] flex flex-col justify-between">
+                            <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
+                                <span class="font-extrabold text-gray-400 uppercase tracking-wider">Factura PDF</span>
+                                <span class="text-[8px] text-gray-500">F-2342</span>
+                            </div>
+                            
+                            <!-- Bounding Boxes Pulsing Visuals -->
+                            <div class="space-y-1.5 flex-1 pt-2">
+                                <div id="box-emisor" class="p-1 rounded transition-colors duration-300">
+                                    <p class="text-[8px] text-gray-500 uppercase font-bold">Emisor</p>
+                                    <p id="val-emisor" class="font-semibold text-gray-400">---</p>
+                                </div>
+                                <div id="box-rfc" class="p-1 rounded transition-colors duration-300">
+                                    <p class="text-[8px] text-gray-500 uppercase font-bold">RFC</p>
+                                    <p id="val-rfc" class="font-mono text-gray-400">---</p>
+                                </div>
+                                <div class="grid grid-cols-3 gap-1">
+                                    <div id="box-subtotal" class="p-1 rounded transition-colors duration-300">
+                                        <p class="text-[8px] text-gray-500 uppercase font-bold">Subtotal</p>
+                                        <p id="val-subtotal" class="font-semibold text-gray-400">---</p>
+                                    </div>
+                                    <div id="box-iva" class="p-1 rounded transition-colors duration-300">
+                                        <p class="text-[8px] text-gray-500 uppercase font-bold">IVA (16%)</p>
+                                        <p id="val-iva" class="font-semibold text-gray-400">---</p>
+                                    </div>
+                                    <div id="box-total" class="p-1 rounded transition-colors duration-300">
+                                        <p class="text-[8px] text-gray-500 uppercase font-bold">Total</p>
+                                        <p id="val-total" class="font-bold text-gray-400">---</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-700/50">
+                        <p id="status-gemini" class="text-[11px] text-gray-400 italic">Esperando archivo PDF...</p>
+                    </div>
+                </div>
+
+                <!-- PANEL 3: GOOGLE SHEETS WRITE (GREEN) -->
+                <div id="panel-sheets" class="bg-slate-800/60 border border-slate-700/60 rounded-3xl p-5 flex flex-col justify-between transition-all duration-300 opacity-60">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-slate-700/50 pb-3 mb-4">
+                            <span class="text-xs font-bold text-google-green uppercase tracking-wider flex items-center">
+                                <i class="fa-solid fa-file-invoice-dollar mr-2"></i> 3. Google Sheets
+                            </span>
+                            <span id="badge-sheets" class="text-[9px] bg-slate-700 text-slate-300 font-bold px-2 py-0.5 rounded-full">Inactivo</span>
+                        </div>
+
+                        <!-- Mini Sheet Spreadsheet simulation -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden h-[180px] text-[9px] flex flex-col">
+                            <div class="bg-emerald-950/40 border-b border-slate-800 p-2 flex items-center justify-between">
+                                <span class="font-bold text-google-green">Egresos 2026.xlsx</span>
+                                <span class="text-[8px] text-slate-400">Hoja 1</span>
+                            </div>
+                            <div class="overflow-x-auto flex-1">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="bg-slate-800/50 text-gray-400 border-b border-slate-800">
+                                            <th class="p-1.5 font-bold">Proveedor</th>
+                                            <th class="p-1.5 font-bold">Total</th>
+                                            <th class="p-1.5 font-bold text-center">Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="mini-sheets-body" class="divide-y divide-slate-800/40 text-gray-300">
+                                        <tr class="opacity-60">
+                                            <td class="p-1.5 truncate max-w-[70px]">Energía SA</td>
+                                            <td class="p-1.5 font-semibold">$14,442.00</td>
+                                            <td class="p-1.5 text-center"><i class="fa-solid fa-cloud text-google-green text-[8px]"></i></td>
+                                        </tr>
+                                        <tr class="opacity-60">
+                                            <td class="p-1.5 truncate max-w-[70px]">Insumos Glob.</td>
+                                            <td class="p-1.5 font-semibold">$8,120.00</td>
+                                            <td class="p-1.5 text-center"><i class="fa-solid fa-cloud text-google-green text-[8px]"></i></td>
+                                        </tr>
+                                        <!-- Animated typing row -->
+                                        <tr id="sheet-typing-row" class="opacity-25 border-dashed border-slate-800 transition-all duration-300">
+                                            <td id="cell-provider" class="p-1.5 font-bold text-google-green truncate max-w-[70px]">---</td>
+                                            <td id="cell-total" class="p-1.5 font-bold text-google-green">---</td>
+                                            <td id="cell-status" class="p-1.5 text-center text-[8px] text-gray-500"><i class="fa-solid fa-circle-notch animate-spin"></i></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-700/50">
+                        <p id="status-sheets" class="text-[11px] text-gray-400 italic">Esperando extracción...</p>
+                    </div>
+                </div>
+
+                <!-- PANEL 4: GOOGLE DRIVE STORAGE (BLUE) -->
+                <div id="panel-drive" class="bg-slate-800/60 border border-slate-700/60 rounded-3xl p-5 flex flex-col justify-between transition-all duration-300 opacity-60">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-slate-700/50 pb-3 mb-4">
+                            <span class="text-xs font-bold text-google-blue uppercase tracking-wider flex items-center">
+                                <i class="fa-solid fa-folder-tree mr-2"></i> 4. Google Drive
+                            </span>
+                            <span id="badge-drive" class="text-[9px] bg-slate-700 text-slate-300 font-bold px-2 py-0.5 rounded-full">Inactivo</span>
+                        </div>
+
+                        <!-- Mini Folder View Simulation -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 h-[180px] flex flex-col justify-between text-xs">
+                            <div class="flex items-center space-x-1.5 text-gray-400 text-[10px]">
+                                <i class="fa-solid fa-house"></i>
+                                <span>/ Facturas / 2026</span>
+                            </div>
+
+                            <!-- Folder and File Animations -->
+                            <div class="flex-1 flex flex-col items-center justify-center space-y-3 pt-3">
+                                <div class="flex items-center space-x-3 bg-slate-800/50 border border-slate-800 py-2 px-3 rounded-xl w-full">
+                                    <i class="fa-solid fa-folder text-google-yellow text-lg"></i>
+                                    <div class="min-w-0">
+                                        <p class="font-bold text-[11px]">Carpeta del Mes</p>
+                                        <p id="folder-name-val" class="text-[9px] text-gray-500">Esperando mes...</p>
+                                    </div>
+                                </div>
+
+                                <div id="drive-file-card" class="flex items-center space-x-3 bg-slate-800/20 border border-dashed border-slate-700/50 py-2 px-3 rounded-xl w-full opacity-30 transition-all duration-500">
+                                    <i class="fa-solid fa-file-pdf text-google-red text-lg"></i>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="text-[9px] text-gray-500 uppercase leading-none font-bold">Archivo Renombrado</p>
+                                        <p id="drive-file-name" class="font-bold text-[9px] text-gray-400 truncate">factura_original.pdf</p>
+                                    </div>
+                                    <span id="file-check-icon" class="text-[9px] text-gray-600"><i class="fa-solid fa-ellipsis"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-700/50">
+                        <p id="status-drive" class="text-[11px] text-gray-400 italic">Esperando clasificación...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Calculator Component -->
+    <section class="py-16 bg-white border-y border-gray-100">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-gradient-to-br from-gray-50 to-blue-50/30 rounded-3xl p-6 sm:p-10 border border-gray-100 shadow-premium relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-5">
+                    <i class="fa-solid fa-calculator text-9xl"></i>
+                </div>
+                
+                <div class="text-center max-w-2xl mx-auto mb-8 relative z-10">
+                    <span class="text-xs font-bold text-google-blue uppercase tracking-widest bg-blue-100/60 px-3 py-1 rounded-full">Calculadora de Ahorro</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mt-2">¿Cuánto te cuesta seguir haciéndlo a mano?</h2>
+                    <p class="text-sm text-gray-500 mt-1">Arrastra los controles para estimar las horas y dinero que recuperas con Artur.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center relative z-10">
+                    <!-- Sliders -->
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between text-sm font-semibold text-gray-700 mb-2">
+                                <span>Facturas recibidas al mes:</span>
+                                <span id="facturas-val" class="text-google-blue font-bold text-base">200</span>
+                            </div>
+                            <input id="facturas-input" type="range" min="50" max="1000" step="25" value="200" 
+                                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-google-blue">
+                            <div class="flex justify-between text-[11px] text-gray-400 mt-1">
+                                <span>50</span>
+                                <span>500</span>
+                                <span>1,000+</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-sm font-semibold text-gray-700 mb-2">
+                                <span>Minutos perdidos por factura:</span>
+                                <span id="tiempo-val" class="text-google-blue font-bold text-base">8 min</span>
+                            </div>
+                            <input id="tiempo-input" type="range" min="3" max="20" step="1" value="8" 
+                                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-google-blue">
+                            <div class="flex justify-between text-[11px] text-gray-400 mt-1">
+                                <span>3 min</span>
+                                <span>10 min</span>
+                                <span>20 min</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results Panel -->
+                    <div class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm flex flex-col justify-between h-full space-y-6">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-3 bg-red-50 rounded-xl">
+                                <p class="text-xs text-gray-500 font-medium">Tiempo perdido al mes</p>
+                                <p id="result-tiempo" class="text-2xl font-black text-google-red mt-1">26.6 hrs</p>
+                            </div>
+                            <div class="p-3 bg-green-50 rounded-xl">
+                                <p class="text-xs text-gray-500 font-medium">Ahorro anual estimado</p>
+                                <p id="result-dinero" class="text-2xl font-black text-google-green mt-1">$48,000</p>
+                            </div>
+                        </div>
+                        <div class="border-t border-gray-100 pt-4">
+                            <p class="text-xs text-gray-500 leading-relaxed">
+                                <u class="underline decoration-google-red/35"><strong class="text-gray-700">¿El diagnóstico?</strong> Capturar datos drena el talento de tu equipo, fomenta errores de conciliación y te condena a operar en la oscuridad financiera.</u>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section (El Dolor) -->
+    <section id="problema" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs font-bold text-google-red uppercase tracking-widest bg-red-50 px-3 py-1 rounded-full">El Desafío Operativo</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-950 mt-3 tracking-tight">
+                    El laberinto administrativo que frena el crecimiento de tu empresa
+                </h2>
+                <p class="text-base sm:text-lg text-gray-600 mt-4 leading-relaxed">
+                    Si eres dueño de PyME, administrador o contador y procesas entre 50 y más de 500 facturas mensuales, conoces perfectamente este ciclo destructivo de tiempo.
+                </p>
+            </div>
+
+            <!-- Pain point grid with customized sequence and optimized sales texts as requested -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Pain point 1: La Pesadilla de Conducir a Ciegas -->
+                <div class="bg-[#FAFAFA] border border-gray-100 hover:border-google-red/20 rounded-3xl p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-google-red mb-6 transition-colors group-hover:bg-google-red group-hover:text-white">
+                            <i class="fa-solid fa-eye-slash text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-3">La Pesadilla de Conducir a Ciegas</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            No saber exactamente cuánto gastas ni en qué rubros o saberlos hasta que el contador o alguien te entrega el reporte... ¡un mes tarde! Tomar decisiones estratégicas con datos obsoletos o nulos es poner en riesgo el flujo de efectivo y la estabilidad de tu empresa.
+                        </p>
+                    </div>
+                    <span class="text-[10px] text-google-red font-bold uppercase tracking-wider mt-4 block">Falta de Visibilidad</span>
+                </div>
+
+                <!-- Pain point 2: Costosa Captura Manual y Errores (Title Updated) -->
+                <div class="bg-[#FAFAFA] border border-gray-100 hover:border-google-red/20 rounded-3xl p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-google-red mb-6 transition-colors group-hover:bg-google-red group-hover:text-white">
+                            <i class="fa-solid fa-keyboard text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-3">Costosa Captura Manual y Errores</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            Transcribir RFCs, nombres de emisores, subtotales, retenciones, IVAs y totales directamente en hojas de Excel. Un costoso proceso manual altamente propenso a errores humanos y que consume muchas horas hombre al año.
+                        </p>
+                    </div>
+                    <span class="text-[10px] text-google-red font-bold uppercase tracking-wider mt-4 block">Captura Obsoleta</span>
+                </div>
+
+                <!-- Pain point 3: El Laberinto del "Descarga y Guarda" -->
+                <div class="bg-[#FAFAFA] border border-gray-100 hover:border-google-red/20 rounded-3xl p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-google-red mb-6 transition-colors group-hover:bg-google-red group-hover:text-white">
+                            <i class="fa-regular fa-folder-open text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-3">El Laberinto del "Descarga y Guarda"</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            Buscar correos de proveedores, descargar PDFs and XMLs, renombrar archivos uno por uno de forma consistente y organizarlos manualmente en carpetas de Drive consume horas que deberías invertir en crecer tu negocio.
+                        </p>
+                    </div>
+                    <span class="text-[10px] text-google-red font-bold uppercase tracking-wider mt-4 block">Carga Administrativa</span>
+                </div>
+
+                <!-- Pain point 4: El Costo del Descontrol -->
+                <div class="bg-[#FAFAFA] border border-gray-100 hover:border-google-red/20 rounded-3xl p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-google-red mb-6 transition-colors group-hover:bg-google-red group-hover:text-white">
+                            <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-3">El Costo del Descontrol</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            Un solo dígito transpuesto en el RFC o monto provoca horas de auditoría interna, retrasos de pagos a proveedores, multas fiscales ante el SAT, facturas clave perdidas y, sobre todo, tomar decisiones basadas en información errónea o nula.
+                        </p>
+                    </div>
+                    <span class="text-[10px] text-google-red font-bold uppercase tracking-wider mt-4 block">Vulnerabilidad Fiscal</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section (El Alivio) -->
+    <section id="solucion" class="py-20 bg-slate-900 text-white relative overflow-hidden">
+        <!-- Floating grid background -->
+        <div class="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <!-- Text -->
+                <div class="lg:col-span-6 space-y-6">
+                    <span class="text-xs font-bold text-google-green uppercase tracking-widest bg-green-950 text-google-green border border-green-900 px-3 py-1 rounded-full">
+                        La Solución NATIVA
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                        Conoce a Artur: Tu nuevo asistente digital que vive dentro de Google
+                    </h2>
+                    <p class="text-sm sm:text-base text-gray-300 leading-relaxed">
+                        A diferencia de otros softwares complejos, Artur no es una plataforma externa en la que debas registrarte, pagar accesos ni capacitar a tu equipo para usar una interfaz nueva.
+                    </p>
+                    <p class="text-sm sm:text-base text-gray-300 leading-relaxed font-semibold text-google-blue">
+                        Artur se instala y funciona de forma 100% nativa en el Google Workspace que tu empresa ya domina día con día.
+                    </p>
+
+                    <div class="space-y-4 pt-4">
+                        <!-- Solution Bullet precisely modified with egresos description -->
+                        <div class="flex items-start space-x-3">
+                            <div class="w-6 h-6 rounded-full bg-google-green/20 border border-google-green/40 flex items-center justify-center text-google-green shrink-0 mt-0.5">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </div>
+                            <p class="text-sm text-gray-200">
+                                <strong class="text-white">Información al instante:</strong> Registra todos tus egresos justo al momento en que recibes las facturas.
+                            </p>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="w-6 h-6 rounded-full bg-google-green/20 border border-google-green/40 flex items-center justify-center text-google-green shrink-0 mt-0.5">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </div>
+                            <p class="text-sm text-gray-200">
+                                <strong class="text-white">Invisible y Eficiente:</strong> Trabaja de fondo 24/7 de forma automatizada leyendo tus correos entrantes de proveedores.
+                            </p>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="w-6 h-6 rounded-full bg-google-green/20 border border-google-green/40 flex items-center justify-center text-google-green shrink-0 mt-0.5">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </div>
+                            <p class="text-sm text-gray-200">
+                                <strong class="text-white">Poder de Gemini AI:</strong> Extrae datos de facturas en PDF y XML con una precisión inigualable.
+                            </p>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="w-6 h-6 rounded-full bg-google-green/20 border border-google-green/40 flex items-center justify-center text-google-green shrink-0 mt-0.5">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </div>
+                            <p class="text-sm text-gray-200">
+                                <strong class="text-white">Almacenamiento Seguro:</strong> Clasifica de manera ordenada las facturas en carpetas de Google Drive y llena tu Google Sheets en tiempo real.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Graphic Schema -->
+                <div class="lg:col-span-6">
+                    <div class="bg-slate-800/80 border border-slate-700 rounded-3xl p-6 sm:p-8 shadow-2xl relative">
+                        <div class="absolute -top-3 -right-3 bg-google-yellow text-slate-900 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                            Inteligente
+                        </div>
+                        
+                        <h4 class="text-base font-bold text-white mb-6 flex items-center">
+                            <i class="fa-solid fa-network-wired text-google-blue mr-2"></i> Flujo de Procesamiento Nivel Artur
+                        </h4>
+
+                        <div class="space-y-6">
+                            <!-- Step 1 in flow - RED -->
+                            <div class="flex items-center space-x-4">
+                                <div class="w-10 h-10 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-google-red shrink-0 font-bold">1</div>
+                                <div class="bg-slate-700/50 rounded-2xl p-3 flex-1 border border-slate-700">
+                                    <p class="text-xs text-google-red font-bold uppercase">Entrada de Correo</p>
+                                    <p class="text-sm text-white font-medium">Identifica automáticamente el correo con facturas en Gmail</p>
+                                </div>
+                            </div>
+                            <!-- Step 2 in flow - YELLOW -->
+                            <div class="flex items-center space-x-4">
+                                <div class="w-10 h-10 rounded-full bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-google-yellow shrink-0 font-bold">2</div>
+                                <div class="bg-slate-700/50 rounded-2xl p-3 flex-1 border border-slate-700">
+                                    <p class="text-xs text-google-yellow font-bold uppercase">Lectura Inteligente</p>
+                                    <p class="text-sm text-white font-medium">Extracción precisa de los datos del documento con Gemini IA</p>
+                                </div>
+                            </div>
+                            <!-- Step 3 in flow - GREEN -->
+                            <div class="flex items-center space-x-4">
+                                <div class="w-10 h-10 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center text-google-green shrink-0 font-bold">3</div>
+                                <div class="bg-slate-700/50 rounded-2xl p-3 flex-1 border border-slate-700">
+                                    <p class="text-xs text-google-green font-bold uppercase">Base de Datos Financiera</p>
+                                    <p class="text-sm text-white font-medium">Escritura automática del renglón tabulado en Google Sheets</p>
+                                </div>
+                            </div>
+                            <!-- Step 4 in flow - BLUE -->
+                            <div class="flex items-center space-x-4">
+                                <div class="w-10 h-10 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-google-blue shrink-0 font-bold">4</div>
+                                <div class="bg-slate-700/50 rounded-2xl p-3 flex-1 border border-slate-700">
+                                    <p class="text-xs text-google-blue font-bold uppercase">Clasificación y Guardado</p>
+                                    <p class="text-sm text-white font-medium">Renombrado inteligente y orden de PDFs/XMLs en Drive</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CTA within card -->
+                        <div class="mt-8 pt-6 border-t border-slate-700 text-center">
+                            <button onclick="scrollToDemoAndRun()" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-bold rounded-full text-slate-900 bg-white hover:bg-gray-100 transition-all hover:scale-105 active:scale-95 duration-150">
+                                Ver Demo de Flujo en Vivo <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Key Section (Beneficios Clave) -->
+    <section id="beneficios" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-xs font-bold text-google-blue uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">Retorno de Inversión</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-3">Por qué Artur es la decisión financiera más inteligente</h2>
+                <p class="text-sm sm:text-base text-gray-500 mt-2">Menos costos ocultos, mayor control operativo y seguridad inquebrantable.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- BENEFIT 1: Financial Visibility (GREEN) - Claridad de Gastos al Instante -->
+                <div class="bg-white border-2 border-gray-100 rounded-3xl p-6 shadow-sm transition-all duration-300 hover:border-google-green hover:shadow-lg hover:shadow-green-500/5 hover:-translate-y-1.5 relative overflow-hidden group flex flex-col justify-between">
+                    <!-- Top accent line -->
+                    <div class="absolute top-0 left-0 right-0 h-[5px] bg-google-green"></div>
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-green-50 flex items-center justify-center text-google-green mb-6 transition-colors group-hover:bg-google-green group-hover:text-white">
+                            <i class="fa-solid fa-chart-line text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-3">👁️ Claridad de Gastos al Instante</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            ¡Nunca más dirijas a ciegas! Artur actualiza tus egresos automáticamente en tiempo real. Sabrás con precisión exacta en qué se gasta cada centavo al día de hoy, permitiéndote tomar decisiones informadas y ágiles que protegen tu rentabilidad.
+                        </p>
+                    </div>
+                    <span class="text-[10px] text-google-green font-bold uppercase tracking-wider mt-4 block">Control de Presupuesto</span>
+                </div>
+
+                <!-- BENEFIT 2: Time Savings (BLUE) -->
+                <div class="bg-white border-2 border-gray-100 rounded-3xl p-6 shadow-sm transition-all duration-300 hover:border-google-blue hover:shadow-lg hover:shadow-blue-500/5 hover:-translate-y-1.5 relative overflow-hidden group flex flex-col justify-between">
+                    <!-- Top accent line -->
+                    <div class="absolute top-0 left-0 right-0 h-[5px] bg-google-blue"></div>
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-google-blue mb-6 transition-colors group-hover:bg-google-blue group-hover:text-white">
+                            <i class="fa-regular fa-clock text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-3">⏱️ Ahorro de Tiempo de Verdad</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            Recupera más de 30 horas de trabajo operativo al mes para tus contadores y administradores. Permite que dediquen su tiempo a la planeación fiscal, auditoría y optimización del negocio en lugar de transcribir datos de facturas.
+                        </p>
+                    </div>
+                    <span class="text-[10px] text-google-blue font-bold uppercase tracking-wider mt-4 block">Eficiencia Operativa</span>
+                </div>
+
+                <!-- BENEFIT 3: Historic Rescuing (YELLOW) - Updated retrospectively for past years exactly -->
+                <div class="bg-white border-2 border-gray-100 rounded-3xl p-6 shadow-sm transition-all duration-300 hover:border-google-yellow hover:shadow-lg hover:shadow-yellow-500/5 hover:-translate-y-1.5 relative overflow-hidden group flex flex-col justify-between">
+                    <!-- Top accent line -->
+                    <div class="absolute top-0 left-0 right-0 h-[5px] bg-google-yellow"></div>
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-yellow-50 flex items-center justify-center text-google-yellow mb-6 transition-colors group-hover:bg-yellow-500 group-hover:text-white">
+                            <i class="fa-solid fa-folder-open text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-3">📂 Histórico Bajo Demanda</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            ¿Necesitas analizar tendencias pasadas? Con nuestros planes Crecimiento y Enterprise, Artur rastrea, lee y estructura tu historial de facturas de años pasados. Organiza tus finanzas retrospectivas para auditorías inmediatas y reportes perfectos.
+                        </p>
+                    </div>
+                    <span class="text-[10px] text-google-yellow font-bold uppercase tracking-wider mt-4 block">Análisis de Datos</span>
+                </div>
+
+                <!-- BENEFIT 4: Security and Privacy (RED) -->
+                <div class="bg-white border-2 border-gray-100 rounded-3xl p-6 shadow-sm transition-all duration-300 hover:border-google-red hover:shadow-lg hover:shadow-red-500/5 hover:-translate-y-1.5 relative overflow-hidden group flex flex-col justify-between">
+                    <!-- Top accent line -->
+                    <div class="absolute top-0 left-0 right-0 h-[5px] bg-google-red"></div>
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-google-red mb-6 transition-colors group-hover:bg-google-red group-hover:text-white">
+                            <i class="fa-solid fa-lock text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-3">🔒 Seguridad 100% Privada</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            Tus datos financieros son sagrados. Artur se instala directamente en tu entorno corporativo de Google Drive. La información jamás viaja a servidores de terceros desconocidos; todo se ejecuta localmente en tu cuenta corporativa.
+                        </p>
+                    </div>
+                    <span class="text-[10px] text-google-red font-bold uppercase tracking-wider mt-4 block">Privacidad de Datos</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works (Cómo Funciona) -->
+    <section id="como-funciona" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-xs font-bold text-google-yellow uppercase tracking-widest bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">El Método Eficiente</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-3">Tu sistema de automatización listo en 3 simples pasos</h2>
+                <p class="text-sm sm:text-base text-gray-500 mt-2">Diseñamos, configuramos y capacitamos sin entorpecer la operación actual de tu negocio.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+                <!-- Step 1 -->
+                <div class="relative flex flex-col items-center text-center group">
+                    <div class="w-16 h-16 rounded-full bg-google-blue flex items-center justify-center text-white text-2xl font-black mb-6 shadow-lg shadow-blue-500/20 relative z-10 transition-transform group-hover:scale-110">
+                        01
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Diagnóstico e Ingeniería</h3>
+                    <p class="text-sm text-gray-500 max-w-xs leading-relaxed">
+                        Analizamos detalladamente el formato en el que recibes tus facturas en el correo actual y mapeamos el flujo que necesitas estructurar.
+                    </p>
+                </div>
+
+                <!-- Step 2 - Infrastructure copy precisely modified to Google Workspace -->
+                <div class="relative flex flex-col items-center text-center group">
+                    <div class="w-16 h-16 rounded-full bg-google-yellow flex items-center justify-center text-white text-2xl font-black mb-6 shadow-lg shadow-yellow-500/20 relative z-10 transition-transform group-hover:scale-110">
+                        02
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Implementación e Integración</h3>
+                    <p class="text-sm text-gray-500 max-w-xs leading-relaxed">
+                        Creamos las automatizaciones personalizadas (Scripts y conexiones a Gemini IA) dentro de tu propia infraestructura de Google Workspace.
+                    </p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="relative flex flex-col items-center text-center group">
+                    <div class="w-16 h-16 rounded-full bg-google-green flex items-center justify-center text-white text-2xl font-black mb-6 shadow-lg shadow-green-500/20 relative z-10 transition-transform group-hover:scale-110">
+                        03
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Pruebas y Entrega</h3>
+                    <p class="text-sm text-gray-500 max-w-xs leading-relaxed">
+                        Realizamos pruebas rigurosas en vivo con tu equipo, validando la precisión absoluta de los datos para garantizar un inicio impecable.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section (Planes de Inversión) -->
+    <section id="precios" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-xs font-bold text-google-blue uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">Modelos de Inversión</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-3">Esquemas claros, transparentes y orientados al valor</h2>
+                <p class="text-sm sm:text-base text-gray-500 mt-2">Un pago de implementación único para adueñarte de tu sistema de por vida.</p>
+            </div>
+
+            <!-- Price grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch mb-12">
+                <!-- Plan 1 - Esencial -->
+                <div class="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm flex flex-col justify-between transition-all duration-300 hover:shadow-xl relative overflow-hidden">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Plan Básico</span>
+                            <span class="text-xl">🥉</span>
+                        </div>
+                        <h3 class="text-2xl font-black text-gray-900">Plan Esencial</h3>
+                        <p class="text-xs text-google-blue font-semibold tracking-wider uppercase mt-1">"Flujo Futuro"</p>
+                        <p class="text-sm text-gray-500 mt-3">Perfecto para automatizar de hoy en adelante de manera limpia.</p>
+                        
+                        <div class="my-6">
+                            <span class="text-4xl font-extrabold text-gray-900">$15,000</span>
+                            <span class="text-xs text-gray-500 font-bold block mt-1">MXN / Pago único de implementación</span>
+                        </div>
+
+                        <ul class="space-y-3.5 border-t border-gray-100 pt-6">
+                            <!-- Bullet 1: Ownership lifetime guarantee -->
+                            <li class="flex items-start space-x-2.5 text-sm text-gray-600 font-semibold">
+                                <i class="fa-solid fa-circle-check text-google-blue mt-0.5 shrink-0 text-base"></i>
+                                <span>Eres dueño de por vida del software implementado.</span>
+                            </li>
+                            <li class="flex items-start space-x-2.5 text-sm text-gray-600">
+                                <i class="fa-solid fa-circle-check text-google-blue mt-0.5 shrink-0"></i>
+                                <span>Automatización en tiempo real del día de implementación en adelante.</span>
+                            </li>
+                            <li class="flex items-start space-x-2.5 text-sm text-gray-600">
+                                <i class="fa-solid fa-circle-check text-google-blue mt-0.5 shrink-0"></i>
+                                <span>Conexión directa a tus correos nuevos.</span>
+                            </li>
+                            <li class="flex items-start space-x-2.5 text-sm text-gray-600">
+                                <i class="fa-solid fa-circle-check text-google-blue mt-0.5 shrink-0"></i>
+                                <span>Capacidad estándar de extracción con IA.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-8">
+                        <button onclick="openModal('Plan Esencial - $15,000 MXN')" class="w-full inline-flex items-center justify-center px-4 py-3 border border-gray-300 text-sm font-semibold rounded-full text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 transition-all">
+                            Elegir Plan Esencial
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Plan 2 - Crecimiento (Recomendado) -->
+                <div class="bg-white border-2 border-google-blue rounded-3xl p-8 shadow-md flex flex-col justify-between transition-all duration-300 hover:shadow-2xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-google-blue text-white text-[10px] font-bold py-1 px-4 rounded-bl-xl uppercase tracking-wider">
+                        Recomendado
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-xs font-bold text-google-blue uppercase tracking-wider">Plan Estrella</span>
+                            <span class="text-xl">🥈</span>
+                        </div>
+                        <h3 class="text-2xl font-black text-gray-900">Plan Crecimiento</h3>
+                        <p class="text-xs text-google-green font-semibold tracking-wider uppercase mt-1">"Año en Curso"</p>
+                        <p class="text-sm text-gray-500 mt-3">Pensado para regularizar todo tu año fiscal actual en tiempo récord.</p>
+                        
+                        <div class="my-6">
+                            <span class="text-4xl font-extrabold text-gray-900">$23,000</span>
+                            <span class="text-xs text-gray-500 font-bold block mt-1">MXN / Pago único de implementación</span>
+                        </div>
+
+                        <ul class="space-y-3.5 border-t border-gray-100 pt-6">
+                            <!-- Bullet 1: Ownership lifetime guarantee -->
+                            <li class="flex items-start space-x-2.5 text-sm text-gray-600 font-semibold">
+                                <i class="fa-solid fa-circle-check text-google-green mt-0.5 shrink-0 text-base"></i>
+                                <span>Eres dueño de por vida del software implementado.</span>
+                            </li>
+                            <li class="flex items-start space-x-2.5 text-sm text-gray-600">
+                                <i class="fa-solid fa-circle-check text-google-green mt-0.5 shrink-0"></i>
+                                <span>Flujo futuro incluido al 100%.</span>
+                            </li>
+                            <li class="flex items-start space-x-2.5 text-sm text-gray-600">
+                                <i class="fa-solid fa-circle-check text-google-green mt-0.5 shrink-0"></i>
+                                <span>Artur escanea el histórico retrospectivo desde el 1 de enero del año actual.</span>
+                            </li>
+                            <li class="flex items-start space-x-2.5 text-sm text-gray-600">
+                                <i class="fa-solid fa-circle-check text-google-green mt-0.5 shrink-0"></i>
+                                <span>Capacidad avanzada de extracción con IA.</span>
+                            </li>
+                            <li class="flex items-start space-x-2.5 text-sm text-gray-600">
+                                <i class="fa-solid fa-circle-check text-google-green mt-0.5 shrink-0"></i>
+                                <span>Regulariza tus finanzas, evita multas y ten tu saldo al día de inmediato.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-8">
+                        <button onclick="openModal('Plan Crecimiento - $23,000 MXN')" class="w-full inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-semibold rounded-full text-white bg-google-blue hover:bg-blue-600 shadow-sm hover:shadow-md transition-all">
+                            Adquirir Plan Crecimiento
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Plan 3 - Enterprise -->
+                <div class="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm flex flex-col justify-between transition-all duration-300 hover:shadow-xl relative overflow-hidden">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Plan Corporativo</span>
+                            <span class="text-xl">🥇</span>
+                        </div>
+                        <h3 class="text-2xl font-black text-gray-900">Plan Enterprise</h3>
+                        <p class="text-xs text-google-red font-semibold tracking-wider uppercase mt-1">"Auditoría Total"</p>
+                        <p class="text-sm text-gray-500 mt-3">Ideal para auditorías profundas y análisis de datos de mediano plazo.</p>
+                        
+                        <div class="my-6">
+                            <span class="text-4xl font-extrabold text-gray-900">$50,000</span>
+                            <span class="text-xs text-gray-500 font-bold block mt-1">MXN + $4,000 por año extra</span>
+                        </div>
+
+                        <ul class="space-y-3.5 border-t border-gray-100 pt-6">
+                            <!-- Bullet 1: Ownership lifetime guarantee -->
+                            <li class="flex items-start space-x-2.5 text-sm text-gray-600 font-semibold">
+                                <i class="fa-solid fa-circle-check text-google-red mt-0.5 shrink-0 text-base"></i>
+                                <span>Eres dueño de por vida del software implementado.</span>
+                            </li>
+                            <li class="flex items-start space-x-2.5 text-sm text-gray-600">
+                                <i class="fa-solid fa-circle-check text-google-red mt-0.5 shrink-0"></i>
+                                <span>Rescate histórico profundo (hasta 5 años atrás).</span>
+                            </li>
+                            <li class="flex items-start space-x-2.5 text-sm text-gray-600">
+                                <i class="fa-solid fa-circle-check text-google-red mt-0.5 shrink-0"></i>
+                                <span>Capacidad prémium de extracción con IA.</span>
+                            </li>
+                            <li class="flex items-start space-x-2.5 text-sm text-gray-600">
+                                <i class="fa-solid fa-circle-check text-google-red mt-0.5 shrink-0"></i>
+                                <span>Extracción y registro de Complementos de Pago.</span>
+                            </li>
+                            <li class="flex items-start space-x-2.5 text-sm text-gray-600">
+                                <i class="fa-solid fa-circle-check text-google-red mt-0.5 shrink-0"></i>
+                                <span>Configuración avanzada para Dashboard Interactivo.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-8">
+                        <button onclick="openModal('Plan Enterprise - $50,000 MXN')" class="w-full inline-flex items-center justify-center px-4 py-3 border border-gray-300 text-sm font-semibold rounded-full text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 transition-all">
+                            Contactar por Plan Enterprise
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes & Transparency -->
+            <div class="bg-blue-50 border border-blue-100 rounded-2xl p-6 md:p-8 max-w-4xl mx-auto">
+                <h4 class="text-sm font-bold text-google-blue flex items-center uppercase tracking-wider mb-2">
+                    <i class="fa-solid fa-circle-info mr-2 text-base"></i> Nota de Transparencia y Garantía
+                </h4>
+                <div class="space-y-3 text-xs sm:text-sm text-gray-600 leading-relaxed">
+                    <p>
+                        <strong>Consumo de Inteligencia Artificial:</strong> El costo del consumo de IA se factura de manera directa en tu consola corporativa de Google (estimado de tan solo $100 a $500 MXN mensuales, según volumen). Artur se encarga de configurar topes estrictos de consumo para tu total tranquilidad, sin cobros intermediarios extra. Le pagas directamente a Google.
+                    </p>
+                    <p>
+                        <strong>Soporte y Monitoreo:</strong> Cuenta con una cuota mensual sumamente competitiva ($1,500 - $5,500 MXN) para soporte, monitoreo de salud del bot y ajustes proactivos derivados de cambios en formatos de proveedores.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-xs font-bold text-google-blue uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full">Preguntas Frecuentes</span>
+                <h2 class="text-3xl font-extrabold text-gray-900 mt-3">Resolvemos todas tus dudas con total claridad</h2>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Question 1 -->
+                <div class="border border-gray-200 rounded-2xl overflow-hidden">
+                    <button class="faq-toggle w-full flex justify-between items-center p-6 text-left focus:outline-none bg-white hover:bg-gray-50 transition-colors" onclick="toggleFaq(this)">
+                        <span class="font-bold text-gray-900 pr-4">¿Por qué es mejor Artur que un software de contabilidad tradicional?</span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-200 shrink-0"></i>
+                    </button>
+                    <div class="faq-content hidden p-6 pt-0 border-t border-gray-100 bg-[#FAFAFA] text-sm text-gray-600 leading-relaxed">
+                        Los softwares de contabilidad tradicionales te exigen licencias por usuario, obligan a tu equipo a operar una plataforma externa diferente y requieren parametrizaciones manuales complejas. Artur trabaja directo en tu Gmail y Google Drive actual. La información cae de forma automática a tus planillas de Google Sheets de todos los días. No hay nada nuevo que aprender.
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="border border-gray-200 rounded-2xl overflow-hidden">
+                    <button class="faq-toggle w-full flex justify-between items-center p-6 text-left focus:outline-none bg-white hover:bg-gray-50 transition-colors" onclick="toggleFaq(this)">
+                        <span class="font-bold text-gray-900 pr-4">¿Qué tan seguros están mis datos financieros?</span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-200 shrink-0"></i>
+                    </button>
+                    <div class="faq-content hidden p-6 pt-0 border-t border-gray-100 bg-[#FAFAFA] text-sm text-gray-600 leading-relaxed">
+                        Tus datos tienen seguridad absoluta de nivel corporativo. Artur se ejecuta mediante Google Apps Script dentro de tu propia cuenta corporativa de Google Workspace. La lectura de archivos e inserción en base de datos se realiza 100% de manera interna; tus archivos y datos nunca salen de tu Drive a un servidor de Artur ni de terceros.
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="border border-gray-200 rounded-2xl overflow-hidden">
+                    <button class="faq-toggle w-full flex justify-between items-center p-6 text-left focus:outline-none bg-white hover:bg-gray-50 transition-colors" onclick="toggleFaq(this)">
+                        <span class="font-bold text-gray-900 pr-4">¿Qué pasa si mi proveedor manda formatos de factura poco comunes?</span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-200 shrink-0"></i>
+                    </button>
+                    <div class="faq-content hidden p-6 pt-0 border-t border-gray-100 bg-[#FAFAFA] text-sm text-gray-600 leading-relaxed">
+                        Gracias al motor de Inteligencia Artificial de Gemini, Artur no depende de posiciones rígidas de texto para extraer datos de los PDFs. Lee e interpreta el contexto de la factura tal y como lo haría un ojo humano experto, procesando con éxito formatos variados e inclusive imágenes escaneadas de baja calidad. Y los datos fiscales precisos los toma directo del XML.
+                    </div>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="border border-gray-200 rounded-2xl overflow-hidden">
+                    <button class="faq-toggle w-full flex justify-between items-center p-6 text-left focus:outline-none bg-white hover:bg-gray-50 transition-colors" onclick="toggleFaq(this)">
+                        <span class="font-bold text-gray-900 pr-4">¿Cuánto tiempo toma tener todo el sistema activo?</span>
+                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-200 shrink-0"></i>
+                    </button>
+                    <div class="faq-content hidden p-6 pt-0 border-t border-gray-100 bg-[#FAFAFA] text-sm text-gray-600 leading-relaxed">
+                        Una vez completada la sesión de diagnóstico y recopilados los accesos, la integración toma de 2 a 3 días hábiles en promedio. Realizamos una entrega formal con tu equipo y pruebas en vivo para que observes el flujo funcionando con precisión del 100%. El tiempo total de inicio a fin es de 10 a 15 días.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="py-20 bg-gradient-to-br from-[#F2F6FC] via-white to-blue-50 relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <div class="w-20 h-20 bg-white rounded-3xl flex items-center justify-center shadow-premium mx-auto mb-8 border border-gray-100">
+                <div class="relative w-12 h-12 flex items-center justify-center">
+                    <img src="ArturLogo.png" alt="Artur Logo" class="h-12 w-auto object-contain absolute z-10" id="brand-logo-footer-top" onerror="this.style.display='none'; document.getElementById('logo-fallback-footer-top').classList.remove('hidden');">
+                    <div id="logo-fallback-footer-top" class="hidden w-11 h-11 rounded-xl bg-gradient-to-tr from-google-blue via-google-green to-google-yellow flex items-center justify-center text-white font-black text-2xl shadow-md">
+                        A
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 tracking-tight leading-tight">
+                Elimina por completo la carga operativa de las facturas de una vez por todas
+            </h2>
+            <p class="text-base sm:text-lg text-gray-600 mt-6 max-w-2xl mx-auto leading-relaxed font-semibold">
+                Agenda hoy una sesión gratuita de diagnóstico de 15 minutos. Veremos en vivo cómo se vería la automatización corriendo en tu propia bandeja de entrada.
+            </p>
+
+            <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button onclick="openModal()" class="w-full sm:w-auto inline-flex items-center justify-center px-10 py-5 border border-transparent text-base font-bold rounded-full text-white bg-google-blue hover:bg-blue-600 shadow-xl shadow-blue-500/25 transition-all hover:-translate-y-1 active:translate-y-0 duration-150">
+                    <i class="fa-regular fa-calendar-check mr-2.5 text-lg"></i> Agendar Mi Diagnóstico Gratis
+                </button>
+                <a href="#precios" class="w-full sm:w-auto inline-flex items-center justify-center px-10 py-5 border border-gray-300 text-base font-bold rounded-full text-gray-700 bg-white hover:bg-gray-50 shadow-sm transition-all hover:-translate-y-1 active:translate-y-0 duration-150">
+                    Explorar planes
+                </a>
+            </div>
+
+            <p class="text-xs text-gray-500 mt-6 italic">
+                Sin compromiso de compra. Diseñado 100% para mostrarte el potencial en tu negocio.
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                <!-- Branding -->
+                <div class="md:col-span-5 flex flex-col items-center md:items-start text-center md:text-left space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative w-8 h-8 flex items-center justify-center">
+                            <img src="ArturLogo.png" alt="Artur Logo" class="h-8 w-auto object-contain absolute z-10 filter brightness-0 invert" id="brand-logo-footer" onerror="this.style.display='none'; document.getElementById('logo-fallback-footer').classList.remove('hidden');">
+                            <div id="logo-fallback-footer" class="hidden w-8 h-8 rounded-lg bg-gradient-to-tr from-google-blue via-google-green to-google-yellow flex items-center justify-center text-white font-black text-sm shadow-md">
+                                A
+                            </div>
+                        </div>
+                        <span class="text-lg font-bold">Artur</span>
+                    </div>
+                    <!-- Updated paragraph description exactly as requested -->
+                    <p class="text-xs text-gray-400 max-w-sm leading-relaxed">
+                        Automatización de facturas e información financiera con Inteligencia Artificial directo en tu Google Workspace.
+                    </p>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs font-semibold text-google-blue uppercase tracking-widest">"Lo hace por ti"</span>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="md:col-span-4 flex flex-col items-center md:items-start space-y-2 text-xs text-gray-400">
+                    <span class="text-white font-bold mb-2 uppercase tracking-wider text-[10px]">Enlaces Rápidos</span>
+                    <a href="#problema" class="hover:text-google-blue transition-colors">El Desafío Operativo</a>
+                    <a href="#solucion" class="hover:text-google-blue transition-colors">La Propuesta Artur</a>
+                    <a href="#beneficios" class="hover:text-google-blue transition-colors">Beneficios de Integración</a>
+                    <a href="#como-funciona" class="hover:text-google-blue transition-colors">Pasos del Diagnóstico</a>
+                </div>
+
+                <!-- Copyright & Social Links: Updated to Youtube and LinkedIn exactly as requested -->
+                <div class="md:col-span-3 text-center md:text-right flex flex-col items-center md:items-end space-y-3">
+                    <span class="text-xs text-gray-500">© 2026 Artur. Todos los derechos reservados.</span>
+                    <div class="flex space-x-4 text-sm text-gray-400">
+                        <a href="#" class="hover:text-white transition-colors text-lg" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                        <a href="#" class="hover:text-white transition-colors text-lg" aria-label="Youtube"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Booking Modal (Lead Generation) -->
+    <div id="booking-modal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <!-- Background overlay -->
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+
+            <!-- Modal Panel -->
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div id="modal-panel" class="inline-block align-bottom bg-white rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-gray-100 duration-300">
+                <div class="bg-white px-6 pt-6 pb-4 sm:p-8 sm:pb-6">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-google-blue">
+                                <i class="fa-regular fa-calendar-check text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900" id="modal-title">Sesión de Diagnóstico</h3>
+                                <p class="text-xs text-gray-500">Duración estimada: 15 Minutos</p>
+                            </div>
+                        </div>
+                        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-500 focus:outline-none p-1 rounded-full hover:bg-gray-100">
+                            <i class="fa-solid fa-xmark text-lg"></i>
+                        </button>
+                    </div>
+
+                    <!-- Selected Plan Alert inside Modal -->
+                    <div id="plan-alert" class="hidden p-3 bg-blue-50 border border-blue-100 rounded-xl text-xs text-google-blue font-semibold mb-4 flex items-center">
+                        <i class="fa-solid fa-circle-info mr-2 text-sm"></i>
+                        <span>Interés registrado en: <span id="selected-plan-name" class="font-bold"></span></span>
+                    </div>
+
+                    <!-- Lead Form (Netlify Form Integrated) -->
+                    <form id="lead-form" method="POST" data-netlify="true" name="diagnostico" onsubmit="submitForm(event)" class="space-y-4">
+                        <input type="hidden" name="form-name" value="diagnostico" />
+                        
+                        <div>
+                            <label for="name" class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">Nombre Completo</label>
+                            <input type="text" id="name" name="nombre" required class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-google-blue/20 focus:border-google-blue" placeholder="Ingresa tu nombre">
+                        </div>
+
+                        <div>
+                            <label for="email" class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">Correo Electrónico de Negocios</label>
+                            <input type="email" id="email" name="email" required class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-google-blue/20 focus:border-google-blue" placeholder="ejemplo@empresa.com">
+                        </div>
+
+                        <div>
+                            <label for="phone" class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">Teléfono / WhatsApp</label>
+                            <input type="tel" id="phone" name="telefono" required class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-google-blue/20 focus:border-google-blue" placeholder="10 dígitos">
+                        </div>
+
+                        <div>
+                            <label for="volume" class="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">¿Cuántas facturas procesas al mes aprox?</label>
+                            <select id="volume" name="facturas" class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-google-blue/20 focus:border-google-blue bg-white">
+                                <option value="50-100">Entre 50 y 100 facturas</option>
+                                <option value="101-300">Entre 101 y 300 facturas</option>
+                                <option value="301-500">Entre 301 y 500 facturas</option>
+                                <option value="500+">Más de 500 facturas</option>
+                            </select>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="pt-2">
+                            <button id="submit-btn" type="submit" class="w-full inline-flex items-center justify-center px-6 py-3.5 border border-transparent text-sm font-bold rounded-full text-white bg-google-blue hover:bg-blue-600 shadow-md hover:shadow-lg transition-all focus:outline-none">
+                                <span id="btn-text">Confirmar e Ir al Calendario</span> <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Success Message Box with Elegant Direct Scheduling CTA -->
+                    <div id="success-box" class="hidden py-6 text-center space-y-6 animate-fade-in">
+                        <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center text-google-green mx-auto border border-green-100 shadow-sm">
+                            <i class="fa-solid fa-circle-check text-4xl animate-bounce"></i>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <h4 class="text-xl font-extrabold text-gray-900">¡Registro Exitoso!</h4>
+                            <p class="text-sm text-gray-600 max-w-sm mx-auto">
+                                Tus datos se han guardado de manera segura. Estamos listos para tu diagnóstico gratuito de 15 minutos.
+                            </p>
+                            <p class="text-xs text-gray-400 max-w-xs mx-auto pt-1">
+                                Tu agenda de citas se abrirá en una nueva pestaña en unos momentos. Si no se abre, por favor haz clic en el botón de abajo.
+                            </p>
+                        </div>
+                        
+                        <div class="pt-2">
+                            <a id="direct-calendar-btn" href="https://calendar.app.google/oJ6JFH8rs4WwKM9g8" target="_blank" class="w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-sm font-bold rounded-full text-white bg-google-blue hover:bg-blue-600 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all focus:outline-none ring-4 ring-google-blue/10 animate-pulse">
+                                <span>Agendar Cita en Google Calendar</span> <i class="fa-solid fa-arrow-up-right-from-square ml-2 text-xs"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="flex items-center justify-center space-x-2 text-xs text-gray-400">
+                            <span class="inline-block h-2 w-2 rounded-full bg-google-blue animate-ping"></span>
+                            <span>Abriendo agenda oficial...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
