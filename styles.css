@@ -1,0 +1,63 @@
+/* Custom Styles for Artur Landing Page */
+.gradient-text {
+    background: linear-gradient(135deg, #4285F4 0%, #0F9D58 35%, #F4B400 70%, #DB4437 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.gradient-border-btn {
+    background: linear-gradient(white, white) padding-box,
+                linear-gradient(135deg, #4285F4, #0F9D58, #F4B400, #DB4437) border-box;
+    border: 2px solid transparent;
+}
+
+/* Custom scrollbar for premium touch */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+@keyframes subtle-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.03); opacity: 0.95; }
+}
+
+.animate-subtle {
+    animation: subtle-pulse 3s infinite ease-in-out;
+}
+
+/* Interactive Simulator Animations */
+.processing-pulse {
+    position: relative;
+}
+
+.processing-pulse::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border: 2px solid #4285F4;
+    border-radius: 12px;
+    animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    pointer-events: none;
+}
+
+.step-transition {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.active-glow-red { border-color: rgba(219, 68, 55, 0.7); box-shadow: 0 0 15px rgba(219, 68, 55, 0.25); }
+.active-glow-yellow { border-color: rgba(244, 180, 0, 0.7); box-shadow: 0 0 15px rgba(244, 180, 0, 0.25); }
+.active-glow-green { border-color: rgba(15, 157, 88, 0.7); box-shadow: 0 0 15px rgba(15, 157, 88, 0.25); }
+.active-glow-blue { border-color: rgba(66, 133, 244, 0.7); box-shadow: 0 0 15px rgba(66, 133, 244, 0.25); }
